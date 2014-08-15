@@ -43,7 +43,12 @@ def ProcessBuffer(buffer_):
     messages = []
 
     while True:
+        if len(buffer_) <= 1:
+            break
         hf = Message()
+        if ord(buffer_[0]) != MESSAGE_TX_SYNC:
+            buffer_ = buffer_[1:]
+            continue
         try:
             msg = hf.getHandler(buffer_)
             buffer_ = buffer_[len(msg.getPayload()) + 4:]
@@ -85,7 +90,7 @@ def EventPump(evm):
 
         evm.callbacks_lock.release()
 
-        time.sleep(0.002)
+        time.sleep(0.02)
 
     evm.pump_lock.acquire()
     evm.pump = False

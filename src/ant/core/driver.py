@@ -24,6 +24,7 @@
 ##############################################################################
 
 import thread
+import time
 
 # USB1 driver uses a USB<->Serial bridge
 import serial
@@ -80,6 +81,8 @@ class Driver(object):
             self._lock.release()
 
     def read(self, count):
+        # sleep is needed to give a chance for write() to acquire lock
+        time.sleep(0.002)
         self._lock.acquire()
 
         try:
